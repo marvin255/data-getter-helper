@@ -83,7 +83,7 @@ final class DataGetterHelper
     /**
      * Try to extract array value from data by set path.
      *
-     * @return mixed
+     * @return mixed[]
      *
      * @throws DataGetterException
      */
@@ -100,6 +100,27 @@ final class DataGetterHelper
         }
 
         return $value;
+    }
+
+    /**
+     * Try to extract and map array value from data by set path.
+     *
+     * @template T
+     *
+     * @psalm-param callable(mixed): T $callback
+     *
+     * @psalm-return T[]
+     *
+     * @return mixed
+     *
+     * @throws DataGetterException
+     */
+    public static function arrayOf(string $path, array|object $data, callable $callback, array $default = self::DEFAULT_ARRAY): array
+    {
+        return array_map(
+            $callback,
+            self::array($path, $data, $default)
+        );
     }
 
     /**

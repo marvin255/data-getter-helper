@@ -373,4 +373,18 @@ final class DataGetterHelperTest extends BaseCase
             ],
         ];
     }
+
+    public function testArrayOf(): void
+    {
+        $key = 'test';
+        $data = [
+            'test' => ['1', '2', '3'],
+        ];
+        $callback = fn (mixed $i): int => (int) $i;
+        $awaits = [1, 2, 3];
+
+        $res = DataGetterHelper::arrayOf($key, $data, $callback);
+
+        $this->assertSame($awaits, $res);
+    }
 }
