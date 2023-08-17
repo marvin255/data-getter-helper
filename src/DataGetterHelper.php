@@ -11,6 +11,9 @@ namespace Marvin255\DataGetterHelper;
  */
 final class DataGetterHelper
 {
+    private const DEFAULT_STRING = '';
+    private const DEFAULT_INT = 0;
+
     /**
      * @psalm-suppress UnusedConstructor
      */
@@ -19,15 +22,31 @@ final class DataGetterHelper
     }
 
     /**
-     * Try ti extract string value from data by set path.
+     * Try to extract string value from data by set path.
      *
      * @throws DataGetterException
      */
-    public static function string(string $path, array|object $data, string $default = ''): string
+    public static function string(string $path, array|object $data, string $default = self::DEFAULT_STRING): string
     {
         $value = self::scalar($path, $data);
 
         return $value === null ? $default : (string) $value;
+    }
+
+    /**
+     * Try to extract int value from data by set path.
+     *
+     * @throws DataGetterException
+     */
+    public static function int(string $path, array|object $data, int $default = self::DEFAULT_INT): int
+    {
+        $value = self::scalar($path, $data);
+
+        if ($value !== null && !is_numeric($value)) {
+            throw new DataGetterException("Item found by path {$path} isn't an int number");
+        }
+
+        return $value === null ? $default : (int) $value;
     }
 
     /**

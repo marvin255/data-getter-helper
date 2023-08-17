@@ -13,7 +13,7 @@ use Marvin255\DataGetterHelper\DataGetterHelper;
 final class DataGetterHelperTest extends BaseCase
 {
     /**
-     * @dataProvider provideScalar
+     * @dataProvider provideString
      */
     public function testString(string $path, array|object $data, string|\Exception $awaits, string $default = ''): void
     {
@@ -26,7 +26,7 @@ final class DataGetterHelperTest extends BaseCase
         $this->assertSame($awaits, $res);
     }
 
-    public static function provideScalar(): array
+    public static function provideString(): array
     {
         $obj = new \stdClass();
         $obj->test = 'value';
@@ -79,6 +79,84 @@ final class DataGetterHelperTest extends BaseCase
                     'test' => [],
                 ],
                 new DataGetterException("Item found by path test isn't scalar"),
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideInt
+     */
+    public function testInt(string $path, array|object $data, int|\Exception $awaits, int $default = 0): void
+    {
+        if ($awaits instanceof \Exception) {
+            $this->expectExceptionObject($awaits);
+        }
+
+        $res = DataGetterHelper::int($path, $data, $default);
+
+        $this->assertSame($awaits, $res);
+    }
+
+    public static function provideInt(): array
+    {
+        $obj = new \stdClass();
+        $obj->test = 123;
+
+        return [
+            'int from array' => [
+                'test',
+                [
+                    'test' => 123,
+                ],
+                123,
+            ],
+            'string from array' => [
+                'test',
+                [
+                    'test' => '123',
+                ],
+                123,
+            ],
+            'string from nested array' => [
+                'test.test_1',
+                [
+                    'test' => [
+                        'test_1' => 123,
+                    ],
+                ],
+                123,
+            ],
+            'string from object' => [
+                'test',
+                $obj,
+                123,
+            ],
+            'default value' => [
+                'test',
+                [],
+                321,
+                321,
+            ],
+            'non trimmed path' => [
+                '  .test.  ',
+                [
+                    'test' => 123,
+                ],
+                123,
+            ],
+            'non scalar exception' => [
+                'test',
+                [
+                    'test' => [],
+                ],
+                new DataGetterException("Item found by path test isn't scalar"),
+            ],
+            'not a number exception' => [
+                'test',
+                [
+                    'test' => 'test',
+                ],
+                new DataGetterException("Item found by path test isn't an int number"),
             ],
         ];
     }
