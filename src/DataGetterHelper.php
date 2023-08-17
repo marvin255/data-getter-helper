@@ -14,6 +14,7 @@ final class DataGetterHelper
     private const DEFAULT_STRING = '';
     private const DEFAULT_INT = 0;
     private const DEFAULT_FLOAT = .0;
+    private const DEFAULT_BOOL = false;
 
     /**
      * @psalm-suppress UnusedConstructor
@@ -64,6 +65,18 @@ final class DataGetterHelper
         }
 
         return $value === null ? $default : (float) $value;
+    }
+
+    /**
+     * Try to extract bool value from data by set path.
+     *
+     * @throws DataGetterException
+     */
+    public static function bool(string $path, array|object $data, bool $default = self::DEFAULT_BOOL): bool
+    {
+        $value = self::scalar($path, $data);
+
+        return $value === null ? $default : (bool) $value;
     }
 
     /**

@@ -238,4 +238,75 @@ final class DataGetterHelperTest extends BaseCase
             ],
         ];
     }
+
+    /**
+     * @dataProvider provideBool
+     */
+    public function testBool(string $path, array|object $data, bool|\Exception $awaits, bool $default = false): void
+    {
+        if ($awaits instanceof \Exception) {
+            $this->expectExceptionObject($awaits);
+        }
+
+        $res = DataGetterHelper::bool($path, $data, $default);
+
+        $this->assertSame($awaits, $res);
+    }
+
+    public static function provideBool(): array
+    {
+        $obj = new \stdClass();
+        $obj->test = true;
+
+        return [
+            'float from array' => [
+                'test',
+                [
+                    'test' => true,
+                ],
+                true,
+            ],
+            'string from array' => [
+                'test',
+                [
+                    'test' => '1',
+                ],
+                true,
+            ],
+            'string from nested array' => [
+                'test.test_1',
+                [
+                    'test' => [
+                        'test_1' => true,
+                    ],
+                ],
+                true,
+            ],
+            'string from object' => [
+                'test',
+                $obj,
+                true,
+            ],
+            'default value' => [
+                'test',
+                [],
+                true,
+                true,
+            ],
+            'non trimmed path' => [
+                '  .test.  ',
+                [
+                    'test' => false,
+                ],
+                false,
+            ],
+            'non scalar exception' => [
+                'test',
+                [
+                    'test' => [],
+                ],
+                new DataGetterException("Item found by path test isn't scalar"),
+            ],
+        ];
+    }
 }
