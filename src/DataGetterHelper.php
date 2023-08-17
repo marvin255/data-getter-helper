@@ -15,6 +15,7 @@ final class DataGetterHelper
     private const DEFAULT_INT = 0;
     private const DEFAULT_FLOAT = .0;
     private const DEFAULT_BOOL = false;
+    private const DEFAULT_ARRAY = [];
 
     /**
      * @psalm-suppress UnusedConstructor
@@ -77,6 +78,28 @@ final class DataGetterHelper
         $value = self::scalar($path, $data);
 
         return $value === null ? $default : (bool) $value;
+    }
+
+    /**
+     * Try to extract array value from data by set path.
+     *
+     * @return mixed
+     *
+     * @throws DataGetterException
+     */
+    public static function array(string $path, array|object $data, array $default = self::DEFAULT_ARRAY): array
+    {
+        $value = self::get($path, $data);
+
+        if ($value === null) {
+            return $default;
+        }
+
+        if (!\is_array($value)) {
+            throw new DataGetterException("Item found by path {$path} isn't an array");
+        }
+
+        return $value;
     }
 
     /**

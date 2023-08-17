@@ -309,4 +309,68 @@ final class DataGetterHelperTest extends BaseCase
             ],
         ];
     }
+
+    /**
+     * @dataProvider provideArray
+     */
+    public function testArray(string $path, array|object $data, array|\Exception $awaits, array $default = []): void
+    {
+        if ($awaits instanceof \Exception) {
+            $this->expectExceptionObject($awaits);
+        }
+
+        $res = DataGetterHelper::array($path, $data, $default);
+
+        $this->assertSame($awaits, $res);
+    }
+
+    public static function provideArray(): array
+    {
+        $obj = new \stdClass();
+        $obj->test = [123];
+
+        return [
+            'array from array' => [
+                'test',
+                [
+                    'test' => [123, 321],
+                ],
+                [123, 321],
+            ],
+            'array from nested array' => [
+                'test.test_1',
+                [
+                    'test' => [
+                        'test_1' => [123],
+                    ],
+                ],
+                [123],
+            ],
+            'string from object' => [
+                'test',
+                $obj,
+                [123],
+            ],
+            'default value' => [
+                'test',
+                [],
+                [123, 321],
+                [123, 321],
+            ],
+            'non trimmed path' => [
+                '  .test.  ',
+                [
+                    'test' => [123],
+                ],
+                [123],
+            ],
+            'non array exception' => [
+                'test',
+                [
+                    'test' => 'test',
+                ],
+                new DataGetterException("Item found by path test isn't an array"),
+            ],
+        ];
+    }
 }
