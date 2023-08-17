@@ -13,6 +13,7 @@ final class DataGetterHelper
 {
     private const DEFAULT_STRING = '';
     private const DEFAULT_INT = 0;
+    private const DEFAULT_FLOAT = .0;
 
     /**
      * @psalm-suppress UnusedConstructor
@@ -47,6 +48,22 @@ final class DataGetterHelper
         }
 
         return $value === null ? $default : (int) $value;
+    }
+
+    /**
+     * Try to extract int value from data by set path.
+     *
+     * @throws DataGetterException
+     */
+    public static function float(string $path, array|object $data, float $default = self::DEFAULT_FLOAT): float
+    {
+        $value = self::scalar($path, $data);
+
+        if ($value !== null && !is_numeric($value)) {
+            throw new DataGetterException("Item found by path {$path} isn't a float number");
+        }
+
+        return $value === null ? $default : (float) $value;
     }
 
     /**

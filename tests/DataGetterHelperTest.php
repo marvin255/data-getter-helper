@@ -160,4 +160,82 @@ final class DataGetterHelperTest extends BaseCase
             ],
         ];
     }
+
+    /**
+     * @dataProvider provideFloat
+     */
+    public function testFloat(string $path, array|object $data, float|\Exception $awaits, float $default = .0): void
+    {
+        if ($awaits instanceof \Exception) {
+            $this->expectExceptionObject($awaits);
+        }
+
+        $res = DataGetterHelper::float($path, $data, $default);
+
+        $this->assertSame($awaits, $res);
+    }
+
+    public static function provideFloat(): array
+    {
+        $obj = new \stdClass();
+        $obj->test = 123.0;
+
+        return [
+            'float from array' => [
+                'test',
+                [
+                    'test' => 123.1,
+                ],
+                123.1,
+            ],
+            'string from array' => [
+                'test',
+                [
+                    'test' => '123.1',
+                ],
+                123.1,
+            ],
+            'string from nested array' => [
+                'test.test_1',
+                [
+                    'test' => [
+                        'test_1' => 123.1,
+                    ],
+                ],
+                123.1,
+            ],
+            'string from object' => [
+                'test',
+                $obj,
+                123.0,
+            ],
+            'default value' => [
+                'test',
+                [],
+                321.0,
+                321.0,
+            ],
+            'non trimmed path' => [
+                '  .test.  ',
+                [
+                    'test' => 123.0,
+                ],
+                123.0,
+            ],
+            'non scalar exception' => [
+                'test',
+                [
+                    'test' => [],
+                ],
+                new DataGetterException("Item found by path test isn't scalar"),
+            ],
+            'not a number exception' => [
+                'test',
+                [
+                    'test' => 'test',
+                ],
+                new DataGetterException("Item found by path test isn't a float number"),
+            ],
+        ];
+    }
 }
