@@ -111,8 +111,6 @@ final class DataGetterHelper
      *
      * @psalm-return T[]
      *
-     * @return mixed
-     *
      * @throws DataGetterException
      */
     public static function arrayOf(string $path, array|object $data, callable $callback, array $default = self::DEFAULT_ARRAY): array
@@ -121,6 +119,33 @@ final class DataGetterHelper
             $callback,
             self::array($path, $data, $default)
         );
+    }
+
+    /**
+     * Try to extract and map array value from data by set path.
+     *
+     * @template T
+     *
+     * @psalm-param class-string<T> $class
+     *
+     * @psalm-return T
+     *
+     * @return mixed
+     *
+     * @throws DataGetterException
+     *
+     * @psalm-suppress InvalidReturnType
+     * @psalm-suppress InvalidReturnStatement
+     */
+    public static function objectOf(string $path, array|object $data, string $class): object
+    {
+        $value = self::get($path, $data);
+
+        if (!is_a($value, $class)) {
+            throw new DataGetterException("Item found by path {$path} isn't an instance of {$class}");
+        }
+
+        return $value;
     }
 
     /**

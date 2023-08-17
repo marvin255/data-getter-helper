@@ -387,4 +387,67 @@ final class DataGetterHelperTest extends BaseCase
 
         $this->assertSame($awaits, $res);
     }
+
+    /**
+     * @psalm-param class-string $class
+     *
+     * @dataProvider provideObjectOf
+     */
+    public function testObjectOf(string $path, array|object $data, string $class, object $awaits): void
+    {
+        if ($awaits instanceof \Exception) {
+            $this->expectExceptionObject($awaits);
+        }
+
+        $res = DataGetterHelper::objectOf($path, $data, $class);
+
+        $this->assertSame($awaits, $res);
+    }
+
+    public static function provideObjectOf(): array
+    {
+        $object = new \stdClass();
+        $class = \stdClass::class;
+
+        return [
+            'object from array' => [
+                'test',
+                [
+                    'test' => $object,
+                ],
+                $class,
+                $object,
+            ],
+            'object from nested array' => [
+                'test.test_1',
+                [
+                    'test' => [
+                        'test_1' => $object,
+                    ],
+                ],
+                $class,
+                $object,
+            ],
+            'non object exception' => [
+                'test',
+                [
+                    'test' => 'test',
+                ],
+                $class,
+                new DataGetterException(
+                    "Item found by path test isn't an instance of " . \stdClass::class
+                ),
+            ],
+            'wrong object class exception' => [
+                'test',
+                [
+                    'test' => $object,
+                ],
+                self::class,
+                new DataGetterException(
+                    "Item found by path test isn't an instance of " . self::class
+                ),
+            ],
+        ];
+    }
 }
