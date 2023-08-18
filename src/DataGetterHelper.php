@@ -28,6 +28,8 @@ final class DataGetterHelper
      * Try to extract string value from data by set path.
      *
      * @throws DataGetterException
+     *
+     * @psalm-pure
      */
     public static function string(string $path, array|object $data, string $default = self::DEFAULT_STRING): string
     {
@@ -40,6 +42,8 @@ final class DataGetterHelper
      * Extract string or throw an exception if there is nothing.
      *
      * @throws DataGetterException
+     *
+     * @psalm-pure
      */
     public static function requireString(string $path, array|object $data): string
     {
@@ -56,6 +60,8 @@ final class DataGetterHelper
      * Try to extract int value from data by set path.
      *
      * @throws DataGetterException
+     *
+     * @psalm-pure
      */
     public static function int(string $path, array|object $data, int $default = self::DEFAULT_INT): int
     {
@@ -72,6 +78,8 @@ final class DataGetterHelper
      * Extract int or throw an exception if there is nothing.
      *
      * @throws DataGetterException
+     *
+     * @psalm-pure
      */
     public static function requireInt(string $path, array|object $data): int
     {
@@ -92,6 +100,8 @@ final class DataGetterHelper
      * Try to extract int value from data by set path.
      *
      * @throws DataGetterException
+     *
+     * @psalm-pure
      */
     public static function float(string $path, array|object $data, float $default = self::DEFAULT_FLOAT): float
     {
@@ -108,6 +118,8 @@ final class DataGetterHelper
      * Extract int or throw an exception if there is nothing.
      *
      * @throws DataGetterException
+     *
+     * @psalm-pure
      */
     public static function requireFloat(string $path, array|object $data): float
     {
@@ -128,6 +140,8 @@ final class DataGetterHelper
      * Try to extract bool value from data by set path.
      *
      * @throws DataGetterException
+     *
+     * @psalm-pure
      */
     public static function bool(string $path, array|object $data, bool $default = self::DEFAULT_BOOL): bool
     {
@@ -140,6 +154,8 @@ final class DataGetterHelper
      * Extract bool or throw an exception if there is nothing.
      *
      * @throws DataGetterException
+     *
+     * @psalm-pure
      */
     public static function requireBool(string $path, array|object $data): bool
     {
@@ -158,6 +174,8 @@ final class DataGetterHelper
      * @return mixed[]
      *
      * @throws DataGetterException
+     *
+     * @psalm-pure
      */
     public static function array(string $path, array|object $data, array $default = self::DEFAULT_ARRAY): array
     {
@@ -184,6 +202,10 @@ final class DataGetterHelper
      * @psalm-return T[]
      *
      * @throws DataGetterException
+     *
+     * @psalm-pure
+     *
+     * @psalm-suppress ImpureFunctionCall
      */
     public static function arrayOf(string $path, array|object $data, callable $callback, array $default = self::DEFAULT_ARRAY): array
     {
@@ -208,6 +230,8 @@ final class DataGetterHelper
      *
      * @psalm-suppress InvalidReturnType
      * @psalm-suppress InvalidReturnStatement
+     *
+     * @psalm-pure
      */
     public static function objectOf(string $path, array|object $data, string $class): object
     {
@@ -224,6 +248,8 @@ final class DataGetterHelper
      * Returns data by set path.
      *
      * @psalm-suppress MixedAssignment
+     *
+     * @psalm-pure
      */
     public static function get(string $path, array|object $data, mixed $default = null): mixed
     {
@@ -245,6 +271,8 @@ final class DataGetterHelper
 
     /**
      * @psalm-return scalar
+     *
+     * @psalm-pure
      */
     private static function scalar(string $path, array|object $data): int|float|bool|string|null
     {
@@ -261,6 +289,8 @@ final class DataGetterHelper
      * Explodes dotted path to array of items.
      *
      * @return string[]
+     *
+     * @psalm-pure
      */
     private static function explodePath(string $path): array
     {
