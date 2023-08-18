@@ -225,7 +225,7 @@ final class DataGetterHelper
      *
      * @psalm-suppress MixedAssignment
      */
-    public static function get(string $path, array|object $data): mixed
+    public static function get(string $path, array|object $data, mixed $default = null): mixed
     {
         $arPath = self::explodePath($path);
 
@@ -236,7 +236,7 @@ final class DataGetterHelper
             } elseif (\is_object($item) && property_exists($item, $chainItem)) {
                 $item = $item->$chainItem;
             } else {
-                return null;
+                return $default;
             }
         }
 

@@ -748,13 +748,13 @@ final class DataGetterHelperTest extends BaseCase
     /**
      * @dataProvider provideGet
      */
-    public function testGet(string $path, array|object $data, mixed $awaits): void
+    public function testGet(string $path, array|object $data, mixed $awaits, mixed $default = null): void
     {
         if ($awaits instanceof \Exception) {
             $this->expectExceptionObject($awaits);
         }
 
-        $res = DataGetterHelper::get($path, $data);
+        $res = DataGetterHelper::get($path, $data, $default);
 
         $this->assertSame($awaits, $res);
     }
@@ -796,7 +796,8 @@ final class DataGetterHelperTest extends BaseCase
             'no value' => [
                 'test',
                 [],
-                null,
+                'value',
+                'value',
             ],
             'non trimmed path' => [
                 '  .test.  ',
