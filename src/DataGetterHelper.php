@@ -221,25 +221,11 @@ final class DataGetterHelper
     }
 
     /**
-     * @psalm-return scalar
-     */
-    private static function scalar(string $path, array|object $data): int|float|bool|string|null
-    {
-        $res = self::get($path, $data);
-
-        if (!\is_scalar($res) && $res !== null) {
-            throw new DataGetterException("Item found by path {$path} isn't scalar");
-        }
-
-        return $res;
-    }
-
-    /**
      * Returns data by set path.
      *
      * @psalm-suppress MixedAssignment
      */
-    private static function get(string $path, array|object $data): mixed
+    public static function get(string $path, array|object $data): mixed
     {
         $arPath = self::explodePath($path);
 
@@ -255,6 +241,20 @@ final class DataGetterHelper
         }
 
         return $item;
+    }
+
+    /**
+     * @psalm-return scalar
+     */
+    private static function scalar(string $path, array|object $data): int|float|bool|string|null
+    {
+        $res = self::get($path, $data);
+
+        if (!\is_scalar($res) && $res !== null) {
+            throw new DataGetterException("Item found by path {$path} isn't scalar");
+        }
+
+        return $res;
     }
 
     /**

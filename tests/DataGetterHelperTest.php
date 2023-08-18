@@ -554,7 +554,7 @@ final class DataGetterHelperTest extends BaseCase
         $obj->test = true;
 
         return [
-            'float from array' => [
+            'bool from array' => [
                 'test',
                 [
                     'test' => true,
@@ -568,7 +568,7 @@ final class DataGetterHelperTest extends BaseCase
                 ],
                 true,
             ],
-            'string from nested array' => [
+            'bool from nested array' => [
                 'test.test_1',
                 [
                     'test' => [
@@ -577,7 +577,7 @@ final class DataGetterHelperTest extends BaseCase
                 ],
                 true,
             ],
-            'string from object' => [
+            'bool from object' => [
                 'test',
                 $obj,
                 true,
@@ -741,6 +741,76 @@ final class DataGetterHelperTest extends BaseCase
                 new DataGetterException(
                     "Item found by path test isn't an instance of " . self::class
                 ),
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideGet
+     */
+    public function testGet(string $path, array|object $data, mixed $awaits): void
+    {
+        if ($awaits instanceof \Exception) {
+            $this->expectExceptionObject($awaits);
+        }
+
+        $res = DataGetterHelper::get($path, $data);
+
+        $this->assertSame($awaits, $res);
+    }
+
+    public static function provideGet(): array
+    {
+        $obj = new \stdClass();
+        $obj->test = 'value';
+
+        return [
+            'string from array' => [
+                'test',
+                [
+                    'test' => 'value',
+                ],
+                'value',
+            ],
+            'int from array' => [
+                'test',
+                [
+                    'test' => 123,
+                ],
+                123,
+            ],
+            'string from nested array' => [
+                'test.test_1',
+                [
+                    'test' => [
+                        'test_1' => 'value',
+                    ],
+                ],
+                'value',
+            ],
+            'string from object' => [
+                'test',
+                $obj,
+                'value',
+            ],
+            'no value' => [
+                'test',
+                [],
+                null,
+            ],
+            'non trimmed path' => [
+                '  .test.  ',
+                [
+                    'test' => 'value',
+                ],
+                'value',
+            ],
+            'non scalar' => [
+                'test',
+                [
+                    'test' => [],
+                ],
+                [],
             ],
         ];
     }
