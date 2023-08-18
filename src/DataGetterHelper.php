@@ -137,6 +137,22 @@ final class DataGetterHelper
     }
 
     /**
+     * Extract bool or throw an exception if there is nothing.
+     *
+     * @throws DataGetterException
+     */
+    public static function requireBool(string $path, array|object $data): bool
+    {
+        $value = self::scalar($path, $data);
+
+        if ($value === null) {
+            throw new DataGetterException("Item isn't found by path {$path}");
+        }
+
+        return (bool) $value;
+    }
+
+    /**
      * Try to extract array value from data by set path.
      *
      * @return mixed[]
