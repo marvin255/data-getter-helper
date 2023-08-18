@@ -69,6 +69,26 @@ final class DataGetterHelper
     }
 
     /**
+     * Extract int or throw an exception if there is nothing..
+     *
+     * @throws DataGetterException
+     */
+    public static function requireInt(string $path, array|object $data): int
+    {
+        $value = self::scalar($path, $data);
+
+        if ($value === null) {
+            throw new DataGetterException("Item isn't found by path {$path}");
+        }
+
+        if (!is_numeric($value)) {
+            throw new DataGetterException("Item found by path {$path} isn't an int number");
+        }
+
+        return (int) $value;
+    }
+
+    /**
      * Try to extract int value from data by set path.
      *
      * @throws DataGetterException

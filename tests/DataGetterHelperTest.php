@@ -131,17 +131,17 @@ final class DataGetterHelperTest extends BaseCase
                 $obj,
                 'value',
             ],
-            'no value' => [
-                'test',
-                [],
-                new DataGetterException("Item isn't found by path test"),
-            ],
             'non trimmed path' => [
                 '  .test.  ',
                 [
                     'test' => 'value',
                 ],
                 'value',
+            ],
+            'no value' => [
+                'test',
+                [],
+                new DataGetterException("Item isn't found by path test"),
             ],
             'non scalar exception' => [
                 'test',
@@ -213,6 +213,83 @@ final class DataGetterHelperTest extends BaseCase
                     'test' => 123,
                 ],
                 123,
+            ],
+            'non scalar exception' => [
+                'test',
+                [
+                    'test' => [],
+                ],
+                new DataGetterException("Item found by path test isn't scalar"),
+            ],
+            'not a number exception' => [
+                'test',
+                [
+                    'test' => 'test',
+                ],
+                new DataGetterException("Item found by path test isn't an int number"),
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideRequireInt
+     */
+    public function testRequireInt(string $path, array|object $data, int|\Exception $awaits): void
+    {
+        if ($awaits instanceof \Exception) {
+            $this->expectExceptionObject($awaits);
+        }
+
+        $res = DataGetterHelper::requireInt($path, $data);
+
+        $this->assertSame($awaits, $res);
+    }
+
+    public static function provideRequireInt(): array
+    {
+        $obj = new \stdClass();
+        $obj->test = 123;
+
+        return [
+            'string from array' => [
+                'test',
+                [
+                    'test' => '123',
+                ],
+                123,
+            ],
+            'int from array' => [
+                'test',
+                [
+                    'test' => 123,
+                ],
+                123,
+            ],
+            'int from nested array' => [
+                'test.test_1',
+                [
+                    'test' => [
+                        'test_1' => 123,
+                    ],
+                ],
+                123,
+            ],
+            'string from object' => [
+                'test',
+                $obj,
+                123,
+            ],
+            'non trimmed path' => [
+                '  .test.  ',
+                [
+                    'test' => 123,
+                ],
+                123,
+            ],
+            'no value' => [
+                'test',
+                [],
+                new DataGetterException("Item isn't found by path test"),
             ],
             'non scalar exception' => [
                 'test',
