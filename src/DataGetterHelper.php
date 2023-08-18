@@ -37,6 +37,22 @@ final class DataGetterHelper
     }
 
     /**
+     * Extract string or throw an exception if there is nothing..
+     *
+     * @throws DataGetterException
+     */
+    public static function requireString(string $path, array|object $data): string
+    {
+        $value = self::scalar($path, $data);
+
+        if ($value === null) {
+            throw new DataGetterException("Item isn't found by path {$path}");
+        }
+
+        return (string) $value;
+    }
+
+    /**
      * Try to extract int value from data by set path.
      *
      * @throws DataGetterException

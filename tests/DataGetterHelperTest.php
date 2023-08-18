@@ -84,6 +84,76 @@ final class DataGetterHelperTest extends BaseCase
     }
 
     /**
+     * @dataProvider provideRequireString
+     */
+    public function testRequireString(string $path, array|object $data, string|\Exception $awaits): void
+    {
+        if ($awaits instanceof \Exception) {
+            $this->expectExceptionObject($awaits);
+        }
+
+        $res = DataGetterHelper::requireString($path, $data);
+
+        $this->assertSame($awaits, $res);
+    }
+
+    public static function provideRequireString(): array
+    {
+        $obj = new \stdClass();
+        $obj->test = 'value';
+
+        return [
+            'string from array' => [
+                'test',
+                [
+                    'test' => 'value',
+                ],
+                'value',
+            ],
+            'int from array' => [
+                'test',
+                [
+                    'test' => 123,
+                ],
+                '123',
+            ],
+            'string from nested array' => [
+                'test.test_1',
+                [
+                    'test' => [
+                        'test_1' => 'value',
+                    ],
+                ],
+                'value',
+            ],
+            'string from object' => [
+                'test',
+                $obj,
+                'value',
+            ],
+            'no value' => [
+                'test',
+                [],
+                new DataGetterException("Item isn't found by path test"),
+            ],
+            'non trimmed path' => [
+                '  .test.  ',
+                [
+                    'test' => 'value',
+                ],
+                'value',
+            ],
+            'non scalar exception' => [
+                'test',
+                [
+                    'test' => [],
+                ],
+                new DataGetterException("Item found by path test isn't scalar"),
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider provideInt
      */
     public function testInt(string $path, array|object $data, int|\Exception $awaits, int $default = 0): void
