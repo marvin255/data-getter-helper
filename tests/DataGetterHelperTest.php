@@ -387,6 +387,83 @@ final class DataGetterHelperTest extends BaseCase
     }
 
     /**
+     * @dataProvider provideRequireFloat
+     */
+    public function testRequireFloat(string $path, array|object $data, float|\Exception $awaits): void
+    {
+        if ($awaits instanceof \Exception) {
+            $this->expectExceptionObject($awaits);
+        }
+
+        $res = DataGetterHelper::requireFloat($path, $data);
+
+        $this->assertSame($awaits, $res);
+    }
+
+    public static function provideRequireFloat(): array
+    {
+        $obj = new \stdClass();
+        $obj->test = 123.0;
+
+        return [
+            'float from array' => [
+                'test',
+                [
+                    'test' => 123.1,
+                ],
+                123.1,
+            ],
+            'string from array' => [
+                'test',
+                [
+                    'test' => '123.1',
+                ],
+                123.1,
+            ],
+            'string from nested array' => [
+                'test.test_1',
+                [
+                    'test' => [
+                        'test_1' => 123.1,
+                    ],
+                ],
+                123.1,
+            ],
+            'string from object' => [
+                'test',
+                $obj,
+                123.0,
+            ],
+            'non trimmed path' => [
+                '  .test.  ',
+                [
+                    'test' => 123.0,
+                ],
+                123.0,
+            ],
+            'no value' => [
+                'test',
+                [],
+                new DataGetterException("Item isn't found by path test"),
+            ],
+            'non scalar exception' => [
+                'test',
+                [
+                    'test' => [],
+                ],
+                new DataGetterException("Item found by path test isn't scalar"),
+            ],
+            'not a number exception' => [
+                'test',
+                [
+                    'test' => 'test',
+                ],
+                new DataGetterException("Item found by path test isn't a float number"),
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider provideBool
      */
     public function testBool(string $path, array|object $data, bool|\Exception $awaits, bool $default = false): void

@@ -37,7 +37,7 @@ final class DataGetterHelper
     }
 
     /**
-     * Extract string or throw an exception if there is nothing..
+     * Extract string or throw an exception if there is nothing.
      *
      * @throws DataGetterException
      */
@@ -69,7 +69,7 @@ final class DataGetterHelper
     }
 
     /**
-     * Extract int or throw an exception if there is nothing..
+     * Extract int or throw an exception if there is nothing.
      *
      * @throws DataGetterException
      */
@@ -102,6 +102,26 @@ final class DataGetterHelper
         }
 
         return $value === null ? $default : (float) $value;
+    }
+
+    /**
+     * Extract int or throw an exception if there is nothing.
+     *
+     * @throws DataGetterException
+     */
+    public static function requireFloat(string $path, array|object $data): float
+    {
+        $value = self::scalar($path, $data);
+
+        if ($value === null) {
+            throw new DataGetterException("Item isn't found by path {$path}");
+        }
+
+        if (!is_numeric($value)) {
+            throw new DataGetterException("Item found by path {$path} isn't a float number");
+        }
+
+        return (float) $value;
     }
 
     /**
