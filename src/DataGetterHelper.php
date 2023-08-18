@@ -11,11 +11,11 @@ namespace Marvin255\DataGetterHelper;
  */
 final class DataGetterHelper
 {
-    private const DEFAULT_STRING = '';
-    private const DEFAULT_INT = 0;
-    private const DEFAULT_FLOAT = .0;
-    private const DEFAULT_BOOL = false;
-    private const DEFAULT_ARRAY = [];
+    public const DEFAULT_STRING = '';
+    public const DEFAULT_INT = 0;
+    public const DEFAULT_FLOAT = .0;
+    public const DEFAULT_BOOL = false;
+    public const DEFAULT_ARRAY = [];
 
     /**
      * @psalm-suppress UnusedConstructor
@@ -223,8 +223,6 @@ final class DataGetterHelper
      * @psalm-param class-string<T> $class
      *
      * @psalm-return T
-     *
-     * @return mixed
      *
      * @throws DataGetterException
      *
