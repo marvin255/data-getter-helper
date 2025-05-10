@@ -12,9 +12,7 @@ use Marvin255\DataGetterHelper\DataGetterHelper;
  */
 final class DataGetterHelperTest extends BaseCase
 {
-    /**
-     * @dataProvider provideString
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideString')]
     public function testString(string $path, array|object $data, string|\Exception $awaits, string $default = ''): void
     {
         if ($awaits instanceof \Exception) {
@@ -83,9 +81,7 @@ final class DataGetterHelperTest extends BaseCase
         ];
     }
 
-    /**
-     * @dataProvider provideRequireString
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideRequireString')]
     public function testRequireString(string $path, array|object $data, string|\Exception $awaits): void
     {
         if ($awaits instanceof \Exception) {
@@ -153,9 +149,7 @@ final class DataGetterHelperTest extends BaseCase
         ];
     }
 
-    /**
-     * @dataProvider provideInt
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInt')]
     public function testInt(string $path, array|object $data, int|\Exception $awaits, int $default = 0): void
     {
         if ($awaits instanceof \Exception) {
@@ -231,9 +225,7 @@ final class DataGetterHelperTest extends BaseCase
         ];
     }
 
-    /**
-     * @dataProvider provideRequireInt
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideRequireInt')]
     public function testRequireInt(string $path, array|object $data, int|\Exception $awaits): void
     {
         if ($awaits instanceof \Exception) {
@@ -308,9 +300,7 @@ final class DataGetterHelperTest extends BaseCase
         ];
     }
 
-    /**
-     * @dataProvider provideFloat
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideFloat')]
     public function testFloat(string $path, array|object $data, float|\Exception $awaits, float $default = .0): void
     {
         if ($awaits instanceof \Exception) {
@@ -386,9 +376,7 @@ final class DataGetterHelperTest extends BaseCase
         ];
     }
 
-    /**
-     * @dataProvider provideRequireFloat
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideRequireFloat')]
     public function testRequireFloat(string $path, array|object $data, float|\Exception $awaits): void
     {
         if ($awaits instanceof \Exception) {
@@ -463,9 +451,7 @@ final class DataGetterHelperTest extends BaseCase
         ];
     }
 
-    /**
-     * @dataProvider provideBool
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideBool')]
     public function testBool(string $path, array|object $data, bool|\Exception $awaits, bool $default = false): void
     {
         if ($awaits instanceof \Exception) {
@@ -534,9 +520,7 @@ final class DataGetterHelperTest extends BaseCase
         ];
     }
 
-    /**
-     * @dataProvider provideRequireBool
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideRequireBool')]
     public function testRequireBool(string $path, array|object $data, bool|\Exception $awaits): void
     {
         if ($awaits instanceof \Exception) {
@@ -604,9 +588,7 @@ final class DataGetterHelperTest extends BaseCase
         ];
     }
 
-    /**
-     * @dataProvider provideArray
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideArray')]
     public function testArray(string $path, array|object $data, array|\Exception $awaits, array $default = []): void
     {
         if ($awaits instanceof \Exception) {
@@ -684,9 +666,8 @@ final class DataGetterHelperTest extends BaseCase
 
     /**
      * @psalm-param class-string $class
-     *
-     * @dataProvider provideObjectOf
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideObjectOf')]
     public function testObjectOf(string $path, array|object $data, string $class, object $awaits): void
     {
         if ($awaits instanceof \Exception) {
@@ -745,9 +726,7 @@ final class DataGetterHelperTest extends BaseCase
         ];
     }
 
-    /**
-     * @dataProvider provideGet
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideGet')]
     public function testGet(string $path, array|object $data, mixed $awaits, mixed $default = null): void
     {
         if ($awaits instanceof \Exception) {
